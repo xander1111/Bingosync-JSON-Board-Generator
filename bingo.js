@@ -14,7 +14,7 @@ function simpleBoard() {
 }
 
 function diffBoard() {
-    const text = parseDiff(document.getElementById("srlText"));
+    const text = parseDiff(document.getElementById("diffText"));
     var diffs = document.getElementById("srlIsaac").value == 0 ? 25 : 4;
 
     if (text.length < 25) {
@@ -95,7 +95,7 @@ function diffBoard() {
         });
     }
 
-    document.getElementById("srlBoardOutput").value = JSON.stringify(jsonOutput);
+    document.getElementById("diffOutput").value = JSON.stringify(jsonOutput);
 }
 
 function parseSimple(text) {
@@ -165,6 +165,6 @@ function copyText(field, buttonPressed) {
     text.select();
     document.execCommand("copy");
 
-    button.value = "Copied!";
-    setTimeout(function(){ button.value = "Copy" }, 2000);
+    button.innerHTML = "Copied!";
+    setTimeout(function(){ button.innerHTML = "Copy" }, 2000);
 }
