@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Bingosync JSON Generator</title>
+        <link rel="stylesheet" href="main.css">
+        <script src="bingo.js"></script>
+    </head>
+    <body>
+        <div id="simpleBoard">
+            <p>Simple JSON Generator:</p>
+            <textarea id="simpleBoardText" cols="50" rows="10" placeholder="Enter each item seperated by a comma."></textarea>
+            <br>
+            <input type="button" value="Generate" onclick="simpleBoard()">
+            <br>
+            <textarea id="simpleBoardOutput" cols="30" rows="3" placeholder="Generated JSON" readonly></textarea>
+            <input type="button" id="copySimple" value="Copy" onclick="copyText('simpleBoardOutput', 'copySimple')">
+        </div>
+
+        <br>
+        <br>
+
+        <div id="srl">
+            <p>Difficulty Balanced JSON Generator:</p>
+            <textarea id="srlText" cols="50" rows="10" placeholder="Enter each item in the format: &quot;item&quot;:difficulty(0-25)[type1, type2...] "></textarea>
+            <br>
+            <select id="srlIsaac">
+                <option value="0">SRL v5 (25 difficulties)</option>
+                <option value="1">Isaac (4 difficulties)</option>
+            </select>
+            <input type="button" value="Generate" onclick="diffBoard()">
+            <br>
+            <textarea id="srlBoardOutput" cols="30" rows="3" placeholder="Generated JSON" readonly></textarea>
+            <input type="button" id="copySrl" value="Copy" onclick="copyText('srlBoardOutput', 'copySrl')">
+        </div>
+    </body>
+</html>
