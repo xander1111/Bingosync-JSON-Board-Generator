@@ -1,10 +1,7 @@
 function simpleBoard() {
     const text = parseSimple(document.getElementById("simpleBoardText"));
 
-    if (text.length < 25) {
-        alert(`Please enter at least 25 items, you entered ${text.length} items.`);
-        return;
-    }
+    if (!validateLength(text)) return;
     
     var jsonOutput = [];
     text.forEach(item => {
@@ -15,28 +12,9 @@ function simpleBoard() {
 
 function diffBoard() {
     const text = parseDiff(document.getElementById("diffText"));
-    var diffs = document.getElementById("srlIsaac").value == 0 ? 25 : 4;
+    const diffs = document.getElementById("srlIsaac").value == 0 ? 25 : 4;
 
-    if (text.length < 25) {
-        alert(`Please enter at least 25 items, you entered ${text.length} items.`);
-        return;
-    }
-
-    var invalidString = "Invalid difficulties:";
-    var invalidFound = [];
-    text.forEach(item => {
-        var difficulty = item[1];
-        if ((difficulty > diffs || difficulty < 1) && !invalidFound.includes(difficulty)) {
-            invalidString += " " + item[1];
-            invalidFound.push(item[1]);
-        }
-    });
-
-    if (invalidFound.length > 0) {
-        alert(`Please use only difficulties 1-${diffs}`);
-        alert(invalidString);
-        return;
-    }
+    if (!validDiffInput(text, diffs)) return;
 
     /*
      * Example JSON output:
@@ -62,27 +40,7 @@ function diffBoard() {
      * ]
      */
 
-    var difficulties = sortDifficulties(text, diffs);
-
-    var emptyDifficulties = [];
-    for (let i = 0; i < diffs; i++) {
-        if (difficulties[i].length == 0) {
-            emptyDifficulties.push(i);
-        }
-    }
-    if (emptyDifficulties.length > 0) {
-        alert(`Please enter an item in all ${diffs} difficulties`);
-
-        var missingString = "Difficulties missing an item:";
-        emptyDifficulties.forEach(difficulty => {
-            missingString += " " + (difficulty + 1);
-        });
-
-        alert(missingString);
-        return;
-    }
-
-
+    var difficulties = getDiffSortedText(text, diffs);
     var jsonOutput = [];
 
     for (let i = 0; i < diffs; i++) {
@@ -131,7 +89,65 @@ function parseDiff(text) {
     return finalText;
 }
 
-function sortDifficulties(text, diffs) {
+function validateLength(input) {
+    if (input.length < 25) {
+        alert(`Please enter at least 25 items, you entered ${input.length} items.`);
+        return false;
+    }
+
+
+    return true;
+}
+
+function validateDifficulties(input, diffs) {
+    var invalidString = "Invalid difficulties:";
+    var invalidFound = [];
+    input.forEach(item => {
+        var difficulty = item[1];
+        if ((difficulty > diffs || difficulty < 1) && !invalidFound.includes(difficulty)) {
+            invalidString += " " + item[1];
+            invalidFound.push(item[1]);
+        }
+    });
+
+    if (invalidFound.length > 0) {
+        alert(`Please use only difficulties 1-${diffs}`);
+        alert(invalidString);
+        return false;
+    }
+
+    var difficulties = getDiffSortedText(input, diffs);
+
+    var emptyDifficulties = [];
+    for (let i = 0; i < diffs; i++) {
+        if (difficulties[i].length == 0) {
+            emptyDifficulties.push(i);
+        }
+    }
+    if (emptyDifficulties.length > 0) {
+        alert(`Please enter an item in all ${diffs} difficulties`);
+
+        var missingString = "Difficulties missing an item:";
+        emptyDifficulties.forEach(difficulty => {
+            missingString += " " + (difficulty + 1);
+        });
+
+        alert(missingString);
+        return false;
+    }
+    
+
+    return true;
+}
+
+function validDiffInput(input, diffs) {
+    if (!validateLength(input)) return false;
+    if (!validateDifficulties(input, diffs)) return false;
+
+    return true;
+}
+
+function getDiffSortedText(text, diffs) {
     var difficulties = [diffs];
     for (let i = 0; i < diffs; i++) {
         difficulties[i] = [];
