@@ -3,11 +3,12 @@ function simpleBoard() {
 
     if (!validateLength(text)) return;
     
-    var jsonOutput = [];
+    let jsonOutput = [];
     text.forEach(item => {
         jsonOutput.push({name: item});
     });
-    document.getElementById("simpleBoardOutput").value = JSON.stringify(jsonOutput);
+
+    document.getElementById('simpleBoardOutput').value = JSON.stringify(jsonOutput);
 }
 
 function diffBoard() {
@@ -40,14 +41,14 @@ function diffBoard() {
      * ]
      */
 
-    var difficulties = getDiffSortedText(text, diffs);
-    var jsonOutput = [];
+    let difficulties = getDiffSortedText(text, diffs);
+    let jsonOutput = [];
 
     for (let i = 0; i < diffs; i++) {
         jsonOutput.push([]);
 
         difficulties[i].forEach(item => {
-            var types = getTypes(item);
+            let types = getTypes(item);
 
             jsonOutput[i].push({ name: item[0], types: types });
         });
@@ -57,9 +58,9 @@ function diffBoard() {
 }
 
 function parseSimple(text) {
-    var splitText = text.value.split(",");
+    let splitText = text.value.split(",");
 
-    var finalText = [];
+    let finalText = [];
     splitText.forEach(item => finalText.push(item.trim()));
 
     if (finalText[finalText.length - 1] == "") {
@@ -71,13 +72,13 @@ function parseSimple(text) {
 }
 
 function parseDiff(text) {
-    var splitText = text.value.match(/"(.*)":([0-9]*)\[(.*)\]/gmi);
+    let splitText = text.value.match(/"(.*)":([0-9]*)\[(.*)\]/gmi);
 
     finalText = [];
     splitText.forEach(item => {
-        var srlRegExp = /"(.*)":([0-9]*)\[(.*)\]/gmi;
-        var itemInfo = [];
-        var groups = srlRegExp.exec(item);
+        let srlRegExp = /"(.*)":([0-9]*)\[(.*)\]/gmi;
+        let itemInfo = [];
+        let  groups = srlRegExp.exec(item);
 
         for (let i = 0; i < 3; i++) {
             itemInfo.push(groups[i + 1]);
@@ -100,10 +101,10 @@ function validateLength(input) {
 }
 
 function validateDifficulties(input, diffs) {
-    var invalidString = "Invalid difficulties:";
-    var invalidFound = [];
+    let invalidString = "Invalid difficulties:";
+    let invalidFound = [];
     input.forEach(item => {
-        var difficulty = item[1];
+        let difficulty = item[1];
         if ((difficulty > diffs || difficulty < 1) && !invalidFound.includes(difficulty)) {
             invalidString += " " + item[1];
             invalidFound.push(item[1]);
@@ -116,9 +117,9 @@ function validateDifficulties(input, diffs) {
         return false;
     }
 
-    var difficulties = getDiffSortedText(input, diffs);
+    let difficulties = getDiffSortedText(input, diffs);
 
-    var emptyDifficulties = [];
+    let emptyDifficulties = [];
     for (let i = 0; i < diffs; i++) {
         if (difficulties[i].length == 0) {
             emptyDifficulties.push(i);
@@ -127,7 +128,7 @@ function validateDifficulties(input, diffs) {
     if (emptyDifficulties.length > 0) {
         alert(`Please enter an item in all ${diffs} difficulties`);
 
-        var missingString = "Difficulties missing an item:";
+        let missingString = "Difficulties missing an item:";
         emptyDifficulties.forEach(difficulty => {
             missingString += " " + (difficulty + 1);
         });
@@ -148,13 +149,13 @@ function validDiffInput(input, diffs) {
 }
 
 function getDiffSortedText(text, diffs) {
-    var difficulties = [diffs];
+    let difficulties = [diffs];
     for (let i = 0; i < diffs; i++) {
         difficulties[i] = [];
     }
 
     text.forEach(item => {
-        var itemDifficulty = parseInt(item[1]);
+        let itemDifficulty = parseInt(item[1]);
 
         difficulties[itemDifficulty - 1].push(item);
     });
@@ -163,10 +164,10 @@ function getDiffSortedText(text, diffs) {
 }
 
 function getTypes(item) {
-    var types = item[2];
+    let types = item[2];
     types = types.split(",");
 
-    var finalTypes = [];
+    let finalTypes = [];
     types.forEach(tag => {
         finalTypes.push(tag.trim());
     });
@@ -184,3 +185,8 @@ function copyText(field, buttonPressed) {
     button.innerHTML = "Copied!";
     setTimeout(function(){ button.innerHTML = "Copy" }, 2000);
 }
+
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    document.getElementById('generateSimple').addEventListener('click', simpleBoard);
+});

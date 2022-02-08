@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
     integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 <!-- Makes textares non-resizeable -->
+
 <link rel="stylesheet" href="main.css">
 <script src="bingo.js"></script>
 
@@ -56,7 +57,7 @@
                 <br>
                 <textarea class="form-control" id="simpleBoardOutput" rows="5" placeholder="Generated JSON" readonly></textarea>
                 <br>
-                <button type="button" class="btn btn-secondary" onclick="simpleBoard()">Generate</button>
+                <button type="button" class="btn btn-secondary" id="generateSimple">Generate</button>
                 <button type="button" class="btn btn-secondary" id="copySimple" onclick="copyText('simpleBoardOutput', 'copySimple')">Copy</button>
             </div>
 
