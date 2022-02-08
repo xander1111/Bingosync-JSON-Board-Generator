@@ -45,6 +45,7 @@
             <div class="col-md-6">
                 <h2>Simple Generator</h2>
                 <p>Generates JSON for the fixed board or randomized options.</p>
+                <p>Note that a fixed board must have exactly 25 items, while a randomized board needs at least 25.</p>
             </div>
 
             <div class="col-md-6">
@@ -55,10 +56,10 @@
             <div class="col-md-6">
                 <textarea class="form-control" id="simpleBoardText" rows="5" placeholder="Enter each item seperated by a comma."></textarea>
                 <br>
-                <textarea class="form-control" id="simpleBoardOutput" rows="5" placeholder="Generated JSON" readonly></textarea>
+                <textarea class="form-control" id="simpleOutput" rows="5" placeholder="Generated JSON" readonly></textarea>
                 <br>
                 <button type="button" class="btn btn-secondary" id="generateSimple">Generate</button>
-                <button type="button" class="btn btn-secondary" id="copySimple" onclick="copyText('simpleBoardOutput', 'copySimple')">Copy</button>
+                <button type="button" class="btn btn-secondary" id="copySimple">Copy</button>
             </div>
 
             <div class="col-md-6">
@@ -71,8 +72,8 @@
                     <option value="1">Isaac (4 difficulties)</option>
                 </select>
                 <br>
-                <button type="button" class="btn btn-secondary" onclick="diffBoard()">Generate</button>
-                <button type="button" class="btn btn-secondary" id="copyDiff" onclick="copyText('diffOutput', 'copyDiff')">Copy</button>
+                <button type="button" class="btn btn-secondary" id="generateDiff">Generate</button>
+                <button type="button" class="btn btn-secondary" id="copyDiff">Copy</button>
             
             </div>
 

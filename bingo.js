@@ -1,3 +1,5 @@
+"use strict";
+
 function simpleBoard() {
     const text = parseSimple(document.getElementById("simpleBoardText"));
 
@@ -180,7 +182,7 @@ function copyText(field, buttonPressed) {
     const button = document.getElementById(buttonPressed);
 
     text.select();
-    document.execCommand("copy");
+    navigator.clipboard.writeText(text.value)
 
     button.innerHTML = "Copied!";
     setTimeout(function(){ button.innerHTML = "Copy" }, 2000);
@@ -189,4 +191,12 @@ function copyText(field, buttonPressed) {
 
 document.addEventListener('DOMContentLoaded', (event) => {
     document.getElementById('generateSimple').addEventListener('click', simpleBoard);
+    document.getElementById('generateDiff').addEventListener('click', diffBoard);
+
+    document.getElementById('copySimple').addEventListener('click', () => {
+        copyText('simpleOutput', 'copySimple')
+    });
+    document.getElementById('copyDiff').addEventListener('click', () => {
+        copyText('diffOutput', 'copyDiff')
+    });
 });
