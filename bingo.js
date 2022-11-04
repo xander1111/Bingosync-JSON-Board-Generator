@@ -200,20 +200,6 @@ function addDiff() {
     });
 }
 
-function parseSimple(text) {
-    let splitText = text.value.split(",");
-
-    let finalText = [];
-    splitText.forEach(item => finalText.push(item.trim()));
-
-    if (finalText[finalText.length - 1] == "") {
-        // Removes an empty last entry in the case a comma is accidentally used after the last item.
-        finalText.length -= 1;
-    }
-
-    return finalText;
-}
-
 function parseDiff(text) {
     let splitText = text.value.match(/"(.*)":([0-9]*)\[(.*)\]/gmi);
 
