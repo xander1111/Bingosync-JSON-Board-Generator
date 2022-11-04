@@ -74,6 +74,86 @@ function addSimple() {
     });
 }
 
+function addDiff() {
+    const itemContainer = document.getElementById('diffBoardGoals');
+    /* 
+        To Add:
+        <div class="flex-row d-flex">
+            <div class="pr-2 flex-grow-1">
+                <input type="text" class="form-control" placeholder="Goal name"></input>
+            </div>
+
+            <div class="px-2 flex-shrink-1">
+                <input type="number" class="form-control" placeholder="Difficulty" min="1" size="10"></input>
+            </div>
+
+            <!--   
+                Unused for now, will implement later
+            <div class="px-2 flex-shrink-1">
+                <input type="text" class="form-control" placeholder="Types"></input>
+            </div> -->
+
+            <div class="pl-2" id="delDiff1">
+                <button type="button" class="btn btn-danger">-</button>
+            </div>
+        </div>
+
+        <br>
+    */
+
+    let newRow = document.createElement('div');
+    newRow.setAttribute('class', 'flex-row d-flex');
+
+    let newNameDiv = document.createElement('div');
+    newNameDiv.setAttribute('class', 'pr-2 flex-grow-1');
+    
+    let newName = document.createElement('input');
+    newName.setAttribute('type', 'text');
+    newName.setAttribute('class', 'form-control');
+    newName.setAttribute('placeholder', 'Goal name');
+
+    let newDiffDiv = document.createElement('div');
+    newDiffDiv.setAttribute('class', 'px-2 flex-shrink-1');
+
+    let newDiff = document.createElement('input');
+    newDiff.setAttribute('type', 'number');
+    newDiff.setAttribute('class', 'form-control');
+    newDiff.setAttribute('placeholder', 'Difficulty');
+    newDiff.setAttribute('min', '1');
+    newDiff.setAttribute('size', '10');
+
+    // TODO: Implement types field in addDiff
+
+    let newDeleteDiv = document.createElement('div');
+    newDeleteDiv.setAttribute('class', 'pl-2');
+
+    let newDelete = document.createElement('button');
+    newDelete.setAttribute('type', 'button');
+    newDelete.setAttribute('class', 'btn btn-danger');
+    newDelete.innerHTML = "-";
+
+    let newBr = document.createElement('br');   // Using a variable so we can delete it later
+
+
+    newNameDiv.appendChild(newName);
+    newDiffDiv.appendChild(newDiff);
+    newDeleteDiv.appendChild(newDelete);
+
+    newRow.appendChild(newNameDiv);
+    newRow.appendChild(newDiffDiv);
+    newRow.appendChild(newDeleteDiv);
+
+    itemContainer.appendChild(newRow);
+    itemContainer.appendChild(newBr);
+
+
+    // Make delete button work
+    newDelete.addEventListener('click', () => {
+        newRow.remove();
+        newBr.remove()
+    });
+}
+
 function diffBoard() {
     const text = parseDiff(document.getElementById("diffText"));
     const diffs = document.getElementById("srlIsaac").value == 0 ? 25 : 4;
@@ -252,11 +332,16 @@ function copyText(field, buttonPressed) {
 
 document.addEventListener('DOMContentLoaded', (event) => {
     document.getElementById('addSimple').addEventListener('click', addSimple);
-    //document.getElementById('addDiff').addEventListener('click', addDiff);
+    document.getElementById('addDiff').addEventListener('click', addDiff);
 
     document.getElementById('delSimple1').addEventListener('click', () => {
         document.getElementById('simpleRow1').remove();
         document.getElementById('simpleRowBr1').remove()
+    });
+
+    document.getElementById('delDiff1').addEventListener('click', () => {
+        document.getElementById('diffRow1').remove();
+        document.getElementById('diffRowBr1').remove()
     });
 
     document.getElementById('generateSimple').addEventListener('click', simpleBoard);
