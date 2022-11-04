@@ -18,6 +18,52 @@ function simpleBoard() {
     document.getElementById('simpleOutput').value = JSON.stringify(jsonOutput);
 }
 
+function diffBoard() {
+    const text = parseDiff(document.getElementById("diffText"));
+    const diffs = document.getElementById("srlIsaac").value == 0 ? 25 : 4;
+
+    if (!validDiffInput(text, diffs)) return;
+
+    /*
+        Example JSON output:
+        [
+     
+	        [ // Each list is a higher difficulty, this is difficulty 1
+                {
+	                "name": "test1",
+	                "types": ["1"]
+	            }, {
+	                "name": "test2",
+	                "types": ["2"]
+	            }
+            ], [ // Difficulty 2
+	            {
+	                "name": "test1",
+	                "types": ["1", "2"]
+	            }, {
+	                "name": "test2",
+	                "types": []
+	            }
+            ]
+        ]
+     */
+
+    let difficulties = getDiffSortedText(text, diffs);
+    let jsonOutput = [];
+
+    for (let i = 0; i < diffs; i++) {
+        jsonOutput.push([]);
+
+        difficulties[i].forEach(item => {
+            let types = getTypes(item);
+
+            jsonOutput[i].push({ name: item[0], types: types });
+        });
+    }
+
+    document.getElementById("diffOutput").value = JSON.stringify(jsonOutput);
+}
+
 function addSimple() {
     const itemContainer = document.getElementById('simpleBoardGoals');
     /*
@@ -152,52 +198,6 @@ function addDiff() {
         newRow.remove();
         newBr.remove()
     });
-}
-
-function diffBoard() {
-    const text = parseDiff(document.getElementById("diffText"));
-    const diffs = document.getElementById("srlIsaac").value == 0 ? 25 : 4;
-
-    if (!validDiffInput(text, diffs)) return;
-
-    /*
-        Example JSON output:
-        [
-     
-	        [ // Each list is a higher difficulty, this is difficulty 1
-                {
-	                "name": "test1",
-	                "types": ["1"]
-	            }, {
-	                "name": "test2",
-	                "types": ["2"]
-	            }
-            ], [ // Difficulty 2
-	            {
-	                "name": "test1",
-	                "types": ["1", "2"]
-	            }, {
-	                "name": "test2",
-	                "types": []
-	            }
-            ]
-        ]
-     */
-
-    let difficulties = getDiffSortedText(text, diffs);
-    let jsonOutput = [];
-
-    for (let i = 0; i < diffs; i++) {
-        jsonOutput.push([]);
-
-        difficulties[i].forEach(item => {
-            let types = getTypes(item);
-
-            jsonOutput[i].push({ name: item[0], types: types });
-        });
-    }
-
-    document.getElementById("diffOutput").value = JSON.stringify(jsonOutput);
 }
 
 function parseSimple(text) {
@@ -345,7 +345,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
 
     document.getElementById('generateSimple').addEventListener('click', simpleBoard);
-    //document.getElementById('generateDiff').addEventListener('click', diffBoard);
+    document.getElementById('generateDiff').addEventListener('click', diffBoard);
 
     document.getElementById('copySimple').addEventListener('click', () => {
         copyText('simpleOutput', 'copySimple')
