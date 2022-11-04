@@ -3,7 +3,7 @@ let diffRowCount = 1;
 
 
 function simpleBoard() {
-    const items = document.getElementById('simpleBoardText').getElementsByTagName('input');
+    const items = document.getElementById('simpleBoardGoals').getElementsByTagName('input');
 
     if (items.length < 25) {
         alert(`Please enter at least 25 items, you entered ${items.length} items.`); 
@@ -19,7 +19,7 @@ function simpleBoard() {
 }
 
 function addSimple() {
-    const itemContainer = document.getElementById('simpleBoardText');
+    const itemContainer = document.getElementById('simpleBoardGoals');
     /*
         To add:
         <div class="flex-row d-flex">
