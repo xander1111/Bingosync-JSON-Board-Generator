@@ -39,41 +39,66 @@
         </div>
     </div>
 
-    <div class="container">
 
+
+    <div class="container">
         <div class="row">
             <div class="col-md-6">
                 <h2>Simple Generator</h2>
                 <p>Generates JSON for the fixed board or randomized options.</p>
-                <p>Note that a fixed board must have exactly 25 items, while a randomized board needs at least 25.</p>
+                <p>Note that a fixed board must have exactly 25 goals, while a randomized board needs at least 25.</p>
             </div>
 
             <div class="col-md-6">
                 <h2>Difficulty Balanced JSON Generator</h2>
                 <p>Generates JSON for the SRL v5 or Isaac options.</p>
+                <p>Goals that share types won't appear in the same row. This option usually requires more goals to work.</p>
             </div>
+        </div>
+
+
+        <div class="row">
 
             <div class="col-md-6">
-                <textarea class="form-control" id="simpleBoardText" rows="5" placeholder="Enter each item seperated by a comma."></textarea>
+                <div id="simpleBoardText">
+                    <div class="flex-row d-flex" id="simpleRow1">
+                        <div class="pr-2 flex-grow-1">
+                            <input type="text" class="form-control" placeholder="Enter goal name here."></input>
+                        </div>
+                        <div class="pl-2" id="delSimple1">
+                            <button type="button" class="btn btn-danger">-</button>
+                        </div>
+                    </div>
+
+                    <br id="simpleRowBr1">
+
+                </div>
+
+                <button type="button" class="btn btn-outline-success btn-block" id="addSimple">Add item</button>
                 <br>
+
                 <textarea class="form-control" id="simpleOutput" rows="5" placeholder="Generated JSON" readonly></textarea>
                 <br>
-                <button type="button" class="btn btn-secondary" id="generateSimple">Generate</button>
-                <button type="button" class="btn btn-secondary" id="copySimple">Copy</button>
+
+                <button type="button" class="btn btn-primary" id="generateSimple">Generate</button>
+                <button type="button" class="btn btn-primary" id="copySimple">Copy</button>
             </div>
 
             <div class="col-md-6">
-                <textarea class="form-control" id="diffText" rows="5" placeholder="Enter each item in the format: &quot;item&quot;:difficulty[type1, type2...]"></textarea>
-                <br>
-                <textarea class="form-control" id="diffOutput" rows="5" placeholder="Generated JSON" readonly></textarea>
-                <br>
                 <select class="form-control" id="srlIsaac">
-                    <option value="0">SRL v5 (25 difficulties)</option>
-                    <option value="1">Isaac (4 difficulties)</option>
+                    <option value="0">SRL v5 (25 difficulty levels)</option>
+                    <option value="1">Isaac (4 difficulty levels)</option>
                 </select>
                 <br>
-                <button type="button" class="btn btn-secondary" id="generateDiff">Generate</button>
-                <button type="button" class="btn btn-secondary" id="copyDiff">Copy</button>
+
+                <textarea class="form-control" id="diffText" rows="1" placeholder="Enter goal name here."></textarea>
+                <br>
+
+                <textarea class="form-control" id="diffOutput" rows="5" placeholder="Generated JSON" readonly></textarea>
+                <br>
+
+                <button type="button" class="btn btn-primary" id="generateDiff">Generate</button>
+                <button type="button" class="btn btn-primary" id="copyDiff">Copy</button>
             
             </div>
 

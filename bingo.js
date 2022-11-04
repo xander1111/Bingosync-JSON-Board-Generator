@@ -1,16 +1,77 @@
 "use strict";
+let diffRowCount = 1;
+
 
 function simpleBoard() {
-    const text = parseSimple(document.getElementById("simpleBoardText"));
+    const items = document.getElementById('simpleBoardText').getElementsByTagName('input');
 
-    if (!validateLength(text)) return;
+    if (items.length < 25) {
+        alert(`Please enter at least 25 items, you entered ${items.length} items.`); 
+        return;
+    }
     
     let jsonOutput = [];
-    text.forEach(item => {
-        jsonOutput.push({name: item});
-    });
+    for (let i = 0; i < items.length; i++) {
+        jsonOutput.push({name: items[i].value});
+    }
 
-    document.getElementById('simpleBoardOutput').value = JSON.stringify(jsonOutput);
+    document.getElementById('simpleOutput').value = JSON.stringify(jsonOutput);
+}
+
+function addSimple() {
+    const itemContainer = document.getElementById('simpleBoardText');
+    /*
+        To add:
+        <div class="flex-row d-flex">
+            <div class="pr-2 flex-grow-1">
+                <input type="text" class="form-control" placeholder="Enter goal name here."></input>
+            </div>
+            <div class="pl-2">
+                <button type="button" class="btn btn-danger">-</button>
+            </div>
+        </div>
+
+        <br>
+    */
+
+    let newRow = document.createElement('div');
+    newRow.setAttribute('class', 'flex-row d-flex');
+
+    let newInputDiv = document.createElement('div');
+    newInputDiv.setAttribute('class', 'pr-2 flex-grow-1');
+
+    let newInput = document.createElement('input');
+    newInput.setAttribute('type', 'text');
+    newInput.setAttribute('class', 'form-control');
+    newInput.setAttribute('placeholder', 'Enter goal name here.');
+
+    let newDeleteDiv = document.createElement('div');
+    newDeleteDiv.setAttribute('class', 'pl-2');
+
+    let newDelete = document.createElement('button');
+    newDelete.setAttribute('type', 'button');
+    newDelete.setAttribute('class', 'btn btn-danger');
+    newDelete.innerHTML = "-";
+
+    let newBr = document.createElement('br');   // Using a variable so we can delete it later
+
+
+    newInputDiv.appendChild(newInput);
+    newDeleteDiv.appendChild(newDelete);
+
+    newRow.appendChild(newInputDiv);
+    newRow.appendChild(newDeleteDiv);
+
+
+    itemContainer.appendChild(newRow);
+    itemContainer.appendChild(newBr);
+
+
+    // Make delete button work
+    newDelete.addEventListener('click', () => {
+        newRow.remove();
+        newBr.remove()
+    });
 }
 
 function diffBoard() {
@@ -20,27 +81,27 @@ function diffBoard() {
     if (!validDiffInput(text, diffs)) return;
 
     /*
-     * Example JSON output:
-     *  [
-     * 
-	 *      [ // Each list is a higher difficulty, this is difficulty 1
-     *          {
-	 *              "name": "test1",
-	 *              "types": ["1"]
-	 *          }, {
-	 *              "name": "test2",
-	 *              "types": ["2"]
-	 *          }
-     *      ], [ // Difficulty 2
-	 *          {
-	 *              "name": "test1",
-	 *              "types": ["1", "2"]
-	 *          }, {
-	 *              "name": "test2",
-	 *              "types": []
-	 *          }
-     *      ]
-     * ]
+        Example JSON output:
+        [
+     
+	        [ // Each list is a higher difficulty, this is difficulty 1
+                {
+	                "name": "test1",
+	                "types": ["1"]
+	            }, {
+	                "name": "test2",
+	                "types": ["2"]
+	            }
+            ], [ // Difficulty 2
+	            {
+	                "name": "test1",
+	                "types": ["1", "2"]
+	            }, {
+	                "name": "test2",
+	                "types": []
+	            }
+            ]
+        ]
      */
 
     let difficulties = getDiffSortedText(text, diffs);
@@ -182,7 +243,7 @@ function copyText(field, buttonPressed) {
     const button = document.getElementById(buttonPressed);
 
     text.select();
-    navigator.clipboard.writeText(text.value)
+    navigator.clipboard.writeText(text.value);
 
     button.innerHTML = "Copied!";
     setTimeout(function(){ button.innerHTML = "Copy" }, 2000);
@@ -190,13 +251,21 @@ function copyText(field, buttonPressed) {
 
 
 document.addEventListener('DOMContentLoaded', (event) => {
+    document.getElementById('addSimple').addEventListener('click', addSimple);
+    //document.getElementById('addDiff').addEventListener('click', addDiff);
+
+    document.getElementById('delSimple1').addEventListener('click', () => {
+        document.getElementById('simpleRow1').remove();
+        document.getElementById('simpleRowBr1').remove()
+    });
+
     document.getElementById('generateSimple').addEventListener('click', simpleBoard);
-    document.getElementById('generateDiff').addEventListener('click', diffBoard);
+    //document.getElementById('generateDiff').addEventListener('click', diffBoard);
 
     document.getElementById('copySimple').addEventListener('click', () => {
         copyText('simpleOutput', 'copySimple')
     });
-    document.getElementById('copyDiff').addEventListener('click', () => {
-        copyText('diffOutput', 'copyDiff')
-    });
+    // document.getElementById('copyDiff').addEventListener('click', () => {
+    //     copyText('diffOutput', 'copyDiff')
+    // });
 });
