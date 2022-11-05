@@ -22,11 +22,12 @@ function diffBoard() {
     document.getElementsByName('diffInputGoal').forEach(goal => goals.push(goal.value));
     const diffs = [];
     document.getElementsByName('diffInputDiff').forEach(diff => diffs.push(parseInt(diff.value)));
-    //const types = document.getElementsByName('diffInputTypes');   Not implemented yet
-    // TODO: Implement types in generator
+    const types = [];
+    document.getElementsByName('diffInputTypes').forEach(type => types.push(type.value));
 
-    const validDiffs = document.getElementById("srlIsaac").value == 0 ? 25 : 4;
-    const items = createItemsArray(goals, diffs/*, types*/);
+    const isIsaac = document.getElementById("srlIsaac").value
+    const validDiffs = isIsaac == 0 ? 25 : 4;
+    const items = createItemsArray(goals, diffs, types, isIsaac);
 
     if (!validDiffInput(items, validDiffs)) return;
 
@@ -61,9 +62,14 @@ function diffBoard() {
         jsonOutput.push([]);
 
         difficulties[i].forEach(item => {
-            let types = []; //getTypes(item);
+            if (isIsaac) {
+            jsonOutput[i].push({ name: item[0]});
+            } else {
+            let types = getTypes(item);
 
             jsonOutput[i].push({ name: item[0], types: types });
+            }
+
         });
     }
 
@@ -139,11 +145,9 @@ function addDiff() {
                 <input type="number" class="form-control" name="diffInputDiff" placeholder="Difficulty" min="1" size="10"></input>
             </div>
 
-            <!--   
-                Unused for now, will implement later
             <div class="px-2 flex-shrink-1">
                 <input type="text" class="form-control" name="diffInputTypes" placeholder="Types"></input>
-            </div> -->
+            </div>
 
             <div class="pl-2" id="delDiff1">
                 <button type="button" class="btn btn-danger">-</button>
@@ -176,7 +180,14 @@ function addDiff() {
     newDiff.setAttribute('size', '10');
     newDiff.setAttribute('name', 'diffInputDiff');
 
-    // TODO: Implement types field in addDiff
+    let newTypeDiv = document.createElement('div');
+    newTypeDiv.setAttribute('class', 'px-2 flex-shrink-1');
+
+    let newType = document.createElement('input');
+    newType.setAttribute('type', 'text');
+    newType.setAttribute('class', 'form-control');
+    newType.setAttribute('placeholder', 'Types');
+    newType.setAttribute('name', 'diffInputTypes');
 
     let newDeleteDiv = document.createElement('div');
     newDeleteDiv.setAttribute('class', 'pl-2');
@@ -192,9 +203,11 @@ function addDiff() {
     newNameDiv.appendChild(newName);
     newDiffDiv.appendChild(newDiff);
     newDeleteDiv.appendChild(newDelete);
+    newTypeDiv.appendChild(newType);
 
     newRow.appendChild(newNameDiv);
     newRow.appendChild(newDiffDiv);
+    newRow.appendChild(newTypeDiv);
     newRow.appendChild(newDeleteDiv);
 
     itemContainer.appendChild(newRow);
@@ -208,16 +221,19 @@ function addDiff() {
     });
 }
 
-function createItemsArray(goals, diffs/*, types*/) {
+function createItemsArray(goals, diffs, types, isIsaac) {
     /* 
-    Returns an array created from goals, diffs, and types.
-    Each item formatted as: [goalName, diff, [types]]
+    Returns an array created from goals, diffs, and types (if not isaac).
+    Each item formatted as: [goalName, diff, types]
     */
     let items = [];
     for (let i = 0; i < goals.length; i++) {
-        let item = [goals[i], diffs[i]/*, types[i]*/];
+        let item = [goals[i], diffs[i]];
+        if (!isIsaac) item.push(types[i]);
         items.push(item);
     }
+
+    console.log(items);
 
     return items;
 }
@@ -228,8 +244,6 @@ function validateDifficulties(input, validDiffs) {
         diffsUsed.add(item[1]);
     });
     diffsUsed = Array.from(diffsUsed);
-
-    console.log(diffsUsed);
 
     let invalidString = "Invalid difficulties:";
     let invalidFound = false;
@@ -337,7 +351,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     document.getElementById('copySimple').addEventListener('click', () => {
         copyText('simpleOutput', 'copySimple')
     });
-    // document.getElementById('copyDiff').addEventListener('click', () => {
-    //     copyText('diffOutput', 'copyDiff')
-    // });
+    document.getElementById('copyDiff').addEventListener('click', () => {
+        copyText('diffOutput', 'copyDiff')
+    });
 });
