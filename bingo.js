@@ -1,5 +1,4 @@
 "use strict";
-let diffRowCount = 1;
 
 
 function simpleBoard() {
@@ -19,10 +18,17 @@ function simpleBoard() {
 }
 
 function diffBoard() {
-    const text = parseDiff(document.getElementById("diffText"));
-    const diffs = document.getElementById("srlIsaac").value == 0 ? 25 : 4;
+    const goals = [];
+    document.getElementsByName('diffInputGoal').forEach(goal => goals.push(goal.value));
+    const diffs = [];
+    document.getElementsByName('diffInputDiff').forEach(diff => diffs.push(parseInt(diff.value)));
+    //const types = document.getElementsByName('diffInputTypes');   Not implemented yet
+    // TODO: Implement types in generator
 
-    if (!validDiffInput(text, diffs)) return;
+    const validDiffs = document.getElementById("srlIsaac").value == 0 ? 25 : 4;
+    const items = createItemsArray(goals, diffs/*, types*/);
+
+    if (!validDiffInput(items, validDiffs)) return;
 
     /*
         Example JSON output:
@@ -48,14 +54,14 @@ function diffBoard() {
         ]
      */
 
-    let difficulties = getDiffSortedText(text, diffs);
+    let difficulties = getDiffSortedText(items, validDiffs);
     let jsonOutput = [];
 
-    for (let i = 0; i < diffs; i++) {
+    for (let i = 0; i < validDiffs; i++) {
         jsonOutput.push([]);
 
         difficulties[i].forEach(item => {
-            let types = getTypes(item);
+            let types = []; //getTypes(item);
 
             jsonOutput[i].push({ name: item[0], types: types });
         });
@@ -126,17 +132,17 @@ function addDiff() {
         To Add:
         <div class="flex-row d-flex">
             <div class="pr-2 flex-grow-1">
-                <input type="text" class="form-control" placeholder="Goal name"></input>
+                <input type="text" class="form-control" name="diffInputGoal" placeholder="Goal name"></input>
             </div>
 
             <div class="px-2 flex-shrink-1">
-                <input type="number" class="form-control" placeholder="Difficulty" min="1" size="10"></input>
+                <input type="number" class="form-control" name="diffInputDiff" placeholder="Difficulty" min="1" size="10"></input>
             </div>
 
             <!--   
                 Unused for now, will implement later
             <div class="px-2 flex-shrink-1">
-                <input type="text" class="form-control" placeholder="Types"></input>
+                <input type="text" class="form-control" name="diffInputTypes" placeholder="Types"></input>
             </div> -->
 
             <div class="pl-2" id="delDiff1">
@@ -157,6 +163,7 @@ function addDiff() {
     newName.setAttribute('type', 'text');
     newName.setAttribute('class', 'form-control');
     newName.setAttribute('placeholder', 'Goal name');
+    newName.setAttribute('name', 'diffInputGoal');
 
     let newDiffDiv = document.createElement('div');
     newDiffDiv.setAttribute('class', 'px-2 flex-shrink-1');
@@ -167,6 +174,7 @@ function addDiff() {
     newDiff.setAttribute('placeholder', 'Difficulty');
     newDiff.setAttribute('min', '1');
     newDiff.setAttribute('size', '10');
+    newDiff.setAttribute('name', 'diffInputDiff');
 
     // TODO: Implement types field in addDiff
 
@@ -200,79 +208,72 @@ function addDiff() {
     });
 }
 
-function parseDiff(text) {
-    let splitText = text.value.match(/"(.*)":([0-9]*)\[(.*)\]/gmi);
-
-    finalText = [];
-    splitText.forEach(item => {
-        let srlRegExp = /"(.*)":([0-9]*)\[(.*)\]/gmi;
-        let itemInfo = [];
-        let  groups = srlRegExp.exec(item);
-
-        for (let i = 0; i < 3; i++) {
-            itemInfo.push(groups[i + 1]);
-        }
-
-        finalText.push(itemInfo);
-    });
-
-    return finalText;
-}
-
-function validateLength(input) {
-    if (input.length < 25) {
-        alert(`Please enter at least 25 items, you entered ${input.length} items.`);
-        return false;
+function createItemsArray(goals, diffs/*, types*/) {
+    /* 
+    Returns an array created from goals, diffs, and types.
+    Each item formatted as: [goalName, diff, [types]]
+    */
+    let items = [];
+    for (let i = 0; i < goals.length; i++) {
+        let item = [goals[i], diffs[i]/*, types[i]*/];
+        items.push(item);
     }
 
-
-    return true;
+    return items;
 }
 
-function validateDifficulties(input, diffs) {
-    let invalidString = "Invalid difficulties:";
-    let invalidFound = [];
+function validateDifficulties(input, validDiffs) {
+    let diffsUsed = new Set();
     input.forEach(item => {
-        let difficulty = item[1];
-        if ((difficulty > diffs || difficulty < 1) && !invalidFound.includes(difficulty)) {
-            invalidString += " " + item[1];
-            invalidFound.push(item[1]);
+        diffsUsed.add(item[1]);
+    });
+    diffsUsed = Array.from(diffsUsed);
+
+    console.log(diffsUsed);
+
+    let invalidString = "Invalid difficulties:";
+    let invalidFound = false;
+    diffsUsed.forEach(diff => {
+        if (diff > validDiffs || diff < 1) {
+            invalidString += " " + diff;
+            invalidFound = true;
         }
     });
 
-    if (invalidFound.length > 0) {
-        alert(`Please use only difficulties 1-${diffs}`);
+    if (invalidFound) {
+        alert(`Please use only difficulties 1-${validDiffs}`);
         alert(invalidString);
         return false;
     }
 
-    let difficulties = getDiffSortedText(input, diffs);
-
     let emptyDifficulties = [];
-    for (let i = 0; i < diffs; i++) {
-        if (difficulties[i].length == 0) {
+    for (let i = 1; i <= validDiffs; i++) {
+        if (!diffsUsed.includes(i)) {
             emptyDifficulties.push(i);
         }
     }
+
     if (emptyDifficulties.length > 0) {
-        alert(`Please enter an item in all ${diffs} difficulties`);
+        alert(`Please enter an item in all ${validDiffs} difficulties`);
 
         let missingString = "Difficulties missing an item:";
         emptyDifficulties.forEach(difficulty => {
-            missingString += " " + (difficulty + 1);
+            missingString += " " + (difficulty);
         });
 
         alert(missingString);
         return false;
     }
     
-
     return true;
 }
 
-function validDiffInput(input, diffs) {
-    if (!validateLength(input)) return false;
-    if (!validateDifficulties(input, diffs)) return false;
+function validDiffInput(input, validDiffs) {
+    if (input.length < 25) {
+        alert(`Please enter at least 25 items, you entered ${input.length} items.`); 
+        return;
+    }
+    if (!validateDifficulties(input, validDiffs)) return false;
 
     return true;
 }
