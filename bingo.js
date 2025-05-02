@@ -330,6 +330,19 @@ function copyText(field, buttonPressed) {
     setTimeout(function(){ button.innerHTML = "Copy" }, 2000);
 }
 
+function generateCookies() {
+    // Simple board cookies
+    
+
+    // Diff board cookies
+    const goals = [];
+    document.getElementsByName('diffInputGoal').forEach(goal => goals.push(goal.value));
+    const diffs = [];
+    document.getElementsByName('diffInputDiff').forEach(diff => diffs.push(parseInt(diff.value)));
+    const types = [];
+    document.getElementsByName('diffInputTypes').forEach(type => types.push(type.value));
+}
+
 
 document.addEventListener('DOMContentLoaded', (event) => {
     document.getElementById('addSimple').addEventListener('click', addSimple);
